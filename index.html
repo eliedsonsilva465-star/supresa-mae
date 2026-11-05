@@ -415,7 +415,13 @@
   <h2 class="section-heading">nossos momentos</h2>
   <p class="section-sub">Cada foto aqui é um pedacinho de uma história cheia de carinho.</p>
   <div class="gallery-grid" id="gallery-grid">
-    <div class="g-status" id="gallery-status">carregando fotos...</div>
+    <div class="g-item"><img src="https://i.ibb.co/qYk5sR4m/20210928-075447.jpg" alt="foto de família"></div>
+    <div class="g-item"><img src="https://i.ibb.co/JwMWHH6g/20240310-220837.jpg" alt="foto de família"></div>
+    <div class="g-item"><img src="https://i.ibb.co/wZnHy0Tp/20250329-103432.jpg" alt="foto de família"></div>
+    <div class="g-item"><img src="https://i.ibb.co/WvhjhSYd/20251227-184851.jpg" alt="foto de família"></div>
+    <div class="g-item"><img src="https://i.ibb.co/21cqz8Ns/IMG-20251227-225041610-MFNR-HDR.jpg" alt="foto de família"></div>
+    <div class="g-item"><img src="https://i.ibb.co/ymtTQnww/IMG-20250409-WA0011.jpg" alt="foto de família"></div>
+    <div class="g-item"><img src="https://i.ibb.co/gZ6FqPZZ/IMG-20250520-WA0002.jpg" alt="foto de família"></div>
   </div>
 </section>
 
@@ -449,22 +455,13 @@ Eu te amo mais do que as palavras conseguem dizer.</p>
    ====================================================================== */
 const CONFIG = {
   // Data e horário de liberação (hora local de Pernambuco)
-  RELEASE_DATE: "2026-11-04",   // formato AAAA-MM-DD
-  RELEASE_TIME: "23:49:00",     // formato HH:MM:SS
+  RELEASE_DATE: "2026-11-05",   // formato AAAA-MM-DD
+  RELEASE_TIME: "00:00:00",     // formato HH:MM:SS
   TIMEZONE_OFFSET: "-03:00",    // America/Recife não tem horário de verão
 
-  // Fotos da galeria: cole aqui a URL direta de cada imagem (ex: links do ibb.co,
-  // imgur, ou qualquer serviço de hospedagem de imagem). Para adicionar uma foto
-  // nova, é só colocar mais uma linha nessa lista e subir o arquivo de novo.
-  PHOTOS: [
-    "https://i.ibb.co/qYk5sR4m/20210928-075447.jpg",
-    "https://i.ibb.co/JwMWHH6g/20240310-220837.jpg",
-    "https://i.ibb.co/wZnHy0Tp/20250329-103432.jpg",
-    "https://i.ibb.co/WvhjhSYd/20251227-184851.jpg",
-    "https://i.ibb.co/21cqz8Ns/IMG-20251227-225041610-MFNR-HDR.jpg",
-    "https://i.ibb.co/ymtTQnww/IMG-20250409-WA0011.jpg",
-    "https://i.ibb.co/gZ6FqPZZ/IMG-20250520-WA0002.jpg",
-  ],
+  // As fotos da galeria agora estão fixas como tags <img> direto no HTML,
+  // na seção "TELA 3: GALERIA" mais abaixo. Para trocar ou adicionar uma
+  // foto, edite diretamente ali.
 
   // Texto final (pode usar quebras de linha)
   FINAL_MESSAGE: null // se preencher uma string aqui, substitui o texto padrão acima
@@ -577,7 +574,6 @@ revealBtn.addEventListener('click', () => {
     document.getElementById('gallery-screen').classList.remove('hidden');
     document.getElementById('final-screen').classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
-    loadGallery();
   }, 550);
 });
 
@@ -589,7 +585,6 @@ function startFlow(){
     revealScreen.classList.remove('hidden');
     document.getElementById('gallery-screen').classList.remove('hidden');
     document.getElementById('final-screen').classList.remove('hidden');
-    loadGallery();
   } else {
     updateCountdown();
     countdownTimer = setInterval(updateCountdown, 1000);
@@ -597,38 +592,11 @@ function startFlow(){
 }
 startFlow();
 
-/* ---------------- galeria: imagens diretas (tag <img>) ------------------- */
-let galleryLoaded = false;
-
-function loadGallery(){
-  if (galleryLoaded) return;
-  galleryLoaded = true;
-
-  const grid = document.getElementById('gallery-grid');
-  const status = document.getElementById('gallery-status');
-
-  if (!Array.isArray(CONFIG.PHOTOS) || CONFIG.PHOTOS.length === 0) {
-    status.textContent = 'Adicione os links das fotos em CONFIG.PHOTOS.';
-    status.classList.add('error');
-    return;
-  }
-
-  status.remove();
-  const frag = document.createDocumentFragment();
-  CONFIG.PHOTOS.forEach(src => {
-    const item = document.createElement('div');
-    item.className = 'g-item';
-    const img = document.createElement('img');
-    img.loading = 'lazy';
-    img.src = src;
-    img.alt = 'foto de família';
-    img.addEventListener('click', () => openLightbox(src));
-    img.addEventListener('error', () => { item.style.display = 'none'; });
-    item.appendChild(img);
-    frag.appendChild(item);
-  });
-  grid.appendChild(frag);
-}
+/* ---------------- galeria: as fotos já estão fixas no HTML acima --------- */
+/* aqui só ligamos o clique em cada foto pra abrir ampliada (lightbox) */
+document.querySelectorAll('.gallery-grid .g-item img').forEach(img => {
+  img.addEventListener('click', () => openLightbox(img.src));
+});
 
 function openLightbox(src){
   const lb = document.getElementById('lightbox');
